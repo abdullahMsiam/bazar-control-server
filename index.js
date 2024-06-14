@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -30,11 +30,29 @@ async function run() {
 
         const productCollection = client.db('bazarSystem').collection('products');
 
+        // get all products
         app.get("/products", async (req, res) => {
             const cursor = productCollection.find();
             const result = await cursor.toArray();
             res.send(result);
+        })
 
+
+        // add a product
+        app.post("/products", async (req, res) => {
+            const addedProduct = req.body;
+            console.log(addedProduct);
+            const result = await productCollection.insertOne(addedProduct);
+            res.send(result);
+        });
+
+        // delete a product 
+        app.delete("/products/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+
+            const result = await productCollection.deleteOne(query);
+            res.send(result);
         })
 
 
