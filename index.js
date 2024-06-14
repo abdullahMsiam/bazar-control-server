@@ -55,6 +55,12 @@ async function run() {
             res.send(result);
         })
 
+        // update a product
+        app.patch("/products/update/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+        })
+
 
 
         // Send a ping to confirm a successful connection
